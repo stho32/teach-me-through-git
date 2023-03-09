@@ -14,9 +14,10 @@ What if you would be able to clone a github repository and then "step through" e
 
 Clone a git repository to your disk, then run inside:
 ```
-tmtg
+tmtg ./
 ```
 
+- the parameter is the path to the repository you want to "discover"
 - tmtg will show you what position you are currently in (e.g. 1/200 commits).
 - It will also ensure you have a clean working directory each time you press + or - (which will move you up or down the commits).
 - It will show the current commit message as well as a list of changed files.
