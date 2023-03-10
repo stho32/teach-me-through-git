@@ -63,7 +63,7 @@ fn main() {
     loop {
         print_status(status);
 
-        let commithash = gitcommands::get_nth_commithash(status.current_position)
+        let commithash = gitcommands::get_nth_commithash(status.number_of_commits - status.current_position +1)
             .expect("Could not get commit hash.");
 
         gitcommands::checkout_commit(&commithash);

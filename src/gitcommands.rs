@@ -23,7 +23,7 @@ pub fn get_commit_count(path: &str) -> Option<u16> {
 pub fn get_nth_commithash(n : u16) -> Option<String> {
     // Get the commit hash of the nth commit
     let output = Command::new("git")
-        .args(&["rev-list", "--max-parents=0", "--skip", &(n.to_string()), "--max-count=1"])
+        .args(&["log", "--skip", &(n.to_string()), "--max-count=1", "--pretty=format:%H"])
         .output()
         .expect("Failed to get commit hash");
 
