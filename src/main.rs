@@ -2,7 +2,6 @@ mod cmdargs;
 mod gitcommands;
 
 use std::io;
-use std::process::{Command, exit};
 use cmdargs::get_path;
 
 #[derive(Clone, Copy)]
@@ -50,15 +49,6 @@ fn next_commit(status: CommitStatus) -> CommitStatus {
     }
 }
 
-fn enter_directory(path: &String) -> bool {
-    let output = Command::new("cd")
-        .arg(path)
-        .output()
-        .expect("Failed to change directory");
-
-    return output.status.success();
-}
-
 fn main() {
     let path = get_path();
 
@@ -69,11 +59,6 @@ fn main() {
         number_of_commits,
         current_position: 1
     };
-
-    if !enter_directory(&path) {
-        println!("Could not change into repository directory.");
-        exit(0);
-    }
 
     loop {
         print_status(status);
