@@ -3,6 +3,8 @@ mod gitcommands;
 
 use std::io;
 use cmdargs::get_path;
+use termion::{clear, cursor};
+use std::io::{stdout, Write};
 
 #[derive(Clone, Copy)]
 struct CommitStatus {
@@ -18,7 +20,9 @@ fn get_next_status(status: CommitStatus) -> CommitStatus {
     let mut buffer = String::new();
     let stdin = io::stdin();
 
-    print!("(+) next commit, (-) prev commit, (Strg+C) exit: ");
+
+println!("You are here!");
+
     stdin.read_line(&mut buffer)
         .expect("Reading from terminal failed :(");
 
@@ -50,28 +54,35 @@ fn next_commit(status: CommitStatus) -> CommitStatus {
 }
 
 fn main() {
-    let path = get_path();
+    let mut stdout = stdout();
+    write!(stdout, "{}{}", clear::All, cursor::Goto(1, 1)).unwrap();
+    stdout.flush().unwrap();
+    
+    println!("You are here!");
 
-    let number_of_commits = gitcommands::get_commit_count(&path).
-        expect("The number of commits could not be detected. Is this path really pointing to a git repository?");
+ 
+    // let path = get_path();
 
-    let mut status = CommitStatus {
-        number_of_commits,
-        current_position: 1
-    };
+    // let number_of_commits = gitcommands::get_commit_count(&path).
+    //     expect("The number of commits could not be detected. Is this path really pointing to a git repository?");
 
-    loop {
-        print_status(status);
+    // let mut status = CommitStatus {
+    //     number_of_commits,
+    //     current_position: 1
+    // };
 
-        let commithash = gitcommands::get_nth_commithash(status.number_of_commits - status.current_position +1)
-            .expect("Could not get commit hash.");
+    // loop {
+    //     print_status(status);
 
-        gitcommands::checkout_commit(&commithash);
-        let info = gitcommands::get_commit_info(&commithash);
+    //     let commithash = gitcommands::get_nth_commithash(status.number_of_commits - status.current_position +1)
+    //         .expect("Could not get commit hash.");
 
-        print!("{:?}", info);
+    //     gitcommands::checkout_commit(&commithash);
+    //     let info = gitcommands::get_commit_info(&commithash);
 
-        status = get_next_status(status);
-    }
+
+println!("You are here!");
+
+    //  
 }
 
