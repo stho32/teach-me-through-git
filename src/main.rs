@@ -1,10 +1,9 @@
 mod cmdargs;
 mod gitcommands;
+mod screen;
 
-use std::io;
 use cmdargs::get_path;
-use termion::{clear, cursor};
-use std::io::{stdout, Write};
+use screen::{clear_screen, read_line};
 
 #[derive(Clone, Copy)]
 struct CommitStatus {
@@ -17,16 +16,7 @@ fn print_status(status : CommitStatus) {
 }
 
 fn get_next_status(status: CommitStatus) -> CommitStatus {
-    let mut buffer = String::new();
-    let stdin = io::stdin();
-
-
-println!("You are here!");
-
-    stdin.read_line(&mut buffer)
-        .expect("Reading from terminal failed :(");
-
-    let buffer = buffer.trim();
+    let buffer = read_line("Choose your next step: (+, -, e)", "");
 
     if buffer == String::from("+") {
         return next_commit(status);
@@ -54,35 +44,28 @@ fn next_commit(status: CommitStatus) -> CommitStatus {
 }
 
 fn main() {
-    let mut stdout = stdout();
-    write!(stdout, "{}{}", clear::All, cursor::Goto(1, 1)).unwrap();
-    stdout.flush().unwrap();
-    
-    println!("You are here!");
+    clear_screen();
 
- 
-    // let path = get_path();
+    let path = get_path();
 
-    // let number_of_commits = gitcommands::get_commit_count(&path).
-    //     expect("The number of commits could not be detected. Is this path really pointing to a git repository?");
+    let number_of_commits = gitcommands::get_commit_count(&path).
+        expect("The number of commits could not be detected. Is this path really pointing to a git repository?");
 
-    // let mut status = CommitStatus {
-    //     number_of_commits,
-    //     current_position: 1
-    // };
+    let mut status = CommitStatus {
+        number_of_commits,
+        current_position: 1
+    };
 
-    // loop {
-    //     print_status(status);
+    loop {
+        print_status(status);
 
-    //     let commithash = gitcommands::get_nth_commithash(status.number_of_commits - status.current_position +1)
-    //         .expect("Could not get commit hash.");
+        let commithash = gitcommands::get_nth_commithash(status.number_of_commits - status.current_position +1)
+            .expect("Could not get commit hash.");
 
-    //     gitcommands::checkout_commit(&commithash);
-    //     let info = gitcommands::get_commit_info(&commithash);
+        gitcommands::checkout_commit(&commithash);
+        let info = gitcommands::get_commit_info(&commithash);
 
 
-println!("You are here!");
-
-    //  
+    }
 }
 
